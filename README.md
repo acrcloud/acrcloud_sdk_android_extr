@@ -6,7 +6,7 @@ This android java SDK can recognize ACRCloud by most of audio file.<br>
 >>>>Audio: mp3, wav, m4a, flac, aac, amr, ape, ogg ...<br>
 
 # ACRCloud
-Docs: [https://docs.acrcloud.com/](https://docs.acrcloud.com/)<br>
+Docs: [https://www.acrcloud.com/docs](https://www.acrcloud.com/docs)<br>
 Console: [https://console.acrcloud.com/](https://console.acrcloud.com/)
 
 # Functions
