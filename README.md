@@ -1,17 +1,27 @@
-# acrcloud_sdk_android_extr
-create  "ACRCloud Fingerprint" by Audio/Video file, and use "ACRCloud Fingerprint" to recognize metainfos by "ACRCloud webapi".
+# Audio Recognition Android SDK for File Recognition
 
-# Overview
-This android java SDK can recognize ACRCloud by most of audio file.<br>
->>>>Audio: mp3, wav, m4a, flac, aac, amr, ape, ogg ...<br>
+## Overview
+  [ACRCloud](https://www.acrcloud.com/) provides [Automatic Content Recognition](https://www.acrcloud.com/docs/introduction/automatic-content-recognition/) services for [Audio Fingerprinting](https://www.acrcloud.com/docs/introduction/audio-fingerprinting/) based applications such as **[Audio Recognition](https://www.acrcloud.com/music-recognition)** (supports music, video, ads for both online and offline), **[Broadcast Monitoring](https://www.acrcloud.com/broadcast-monitoring)**, **[Second Screen](https://www.acrcloud.com/second-screen-synchronization)**, **[Copyright Protection](https://www.acrcloud.com/copyright-protection-de-duplication)** and etc.<br>
+  
+  This **audio recognition Android SDK** support most of audio / video files. 
 
-# ACRCloud
-Docs: [https://www.acrcloud.com/docs](https://www.acrcloud.com/docs)<br>
-Console: [https://console.acrcloud.com/](https://console.acrcloud.com/)
+>>Audio: mp3, wav, m4a, flac, aac, amr, ape, ogg ...<br>
+>>Video: mp4, mkv, wmv, flv, ts, avi ...
 
-# Functions
+## Recognize audio while recording
+If you want to recognize audio by recording sound through microphone.
+Download [Android SDK for Recording](https://ap-console.acrcloud.com/downloads/sdk/android) instead and see [Android Demo](https://www.acrcloud.com/docs/demos/android-demo/).
+
+## Requirements
+Follow the tutorials to create a project and get your host, access_key and access_secret.
+
+ * [How to identify songs by sound](https://www.acrcloud.com/docs/tutorials/identify-music-by-sound/)
+ 
+ * [How to detect custom audio content by sound](https://www.acrcloud.com/docs/tutorials/identify-audio-custom-content/)
+ 
+## Functions
 Introduction all API.
-## src/com/acrcloud/utils/ACRCloudRecognizer.java
+### src/com/acrcloud/utils/ACRCloudRecognizer.java
 ```java
       public String recognizeByFile(String filePath, int startSeconds)
       /**
@@ -53,7 +63,7 @@ Introduction all API.
       **/
 ```
 
-## src/com/acrcloud/utils/ACRCloudExtrTool.java 
+### src/com/acrcloud/utils/ACRCloudExtrTool.java 
 ```java
 public static byte[] createFingerprintByFile(String fileName, int startTimeSeconds, int audioLenSeconds, boolean isDB)
       //fileName: Path of input file;
@@ -92,7 +102,7 @@ public static byte[] decodeAudioByFileBuffer(byte[] dataBuffer, int dataBufferLe
 def version()
       //return the version of this module
 ```
-# Example
+## Example
 Replace "xxxxxxxx" below with your project's access_key and access_secret.<br>
 ```java
 import java.io.*;
