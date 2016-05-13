@@ -13,7 +13,7 @@ If you want to recognize audio by recording sound through microphone.
 Download [Android SDK for Recording](https://ap-console.acrcloud.com/downloads/sdk/android) instead and see [Android Demo](https://www.acrcloud.com/docs/demos/android-demo/).
 
 ## Requirements
-Follow the tutorials to create a project and get your host, access_key and access_secret.
+Follow one of the tutorials to create a project and get your host, access_key and access_secret.
 
  * [How to identify songs by sound](https://www.acrcloud.com/docs/tutorials/identify-music-by-sound/)
  
