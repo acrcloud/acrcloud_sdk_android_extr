@@ -75,10 +75,10 @@ public class MainActivity extends AppCompatActivity {
 
         public void run() {
             Map<String, Object> config = new HashMap<String, Object>();
-            // Replace "xxxxxxxx" below with your project's access_key and access_secret.
+            // Replace "xxxxxxxx" below with your project's host, access_key and access_secret.
             config.put("access_key", "XXXXXXXXX");
             config.put("access_secret", "XXXXXXXX");
-            config.put("host", "ap-southeast-1.api.acrcloud.com");
+            config.put("host", "XXXXXXXX");
             config.put("debug", false);
             config.put("timeout", 5);
 
