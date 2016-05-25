@@ -103,7 +103,7 @@ def version()
       //return the version of this module
 ```
 ## Example
-Replace "xxxxxxxx" below with your project's access_key and access_secret.<br>
+Replace "xxxxxxxx" below with your project's host, access_key and access_secret.<br>
 ```java
 import java.io.*;
 import java.util.Map;
@@ -115,7 +115,7 @@ public class Test {
 
     public static void main(String[] args) {
         Map<String, Object> config = new HashMap<String, Object>();
-        config.put("host", "ap-southeast-1.api.acrcloud.com");
+        config.put("host", "XXXXXXXX");
         config.put("access_key", "XXXXXXXX");
         config.put("access_secret", "XXXXXXXX");
         config.put("debug", false);
