@@ -83,36 +83,36 @@ public class MainActivity extends AppCompatActivity {
             config.put("timeout", 5);
 
             ACRCloudRecognizer re = new ACRCloudRecognizer(config);
-            String result1 = re.recognizeByFile(path + "/test.mp3", 50);
-            System.out.println(result1);
+            String result = re.recognizeByFile(path + "/test.mp3", 10);
+            System.out.println(result);
 
-            File file = new File(path + "/test.mp3");
-            byte[] buffer = new byte[3 * 1024 * 1024];
-            if (!file.exists()) {
-                return;
-            }
-            FileInputStream fin = null;
-            int bufferLen = 0;
-            try {
-                fin = new FileInputStream(file);
-                bufferLen = fin.read(buffer, 0, buffer.length);
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                try {
-                    if (fin != null) {
-                        fin.close();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            System.out.println("bufferLen=" + bufferLen);
+            //File file = new File(path + "/test.mp3");
+            //byte[] buffer = new byte[3 * 1024 * 1024];
+            //if (!file.exists()) {
+            //    return;
+            //}
+            //FileInputStream fin = null;
+            //int bufferLen = 0;
+            //try {
+            //    fin = new FileInputStream(file);
+            //    bufferLen = fin.read(buffer, 0, buffer.length);
+            //} catch (Exception e) {
+            //    e.printStackTrace();
+            //} finally {
+            //    try {
+            //        if (fin != null) {
+            //            fin.close();
+            //        }
+            //    } catch (IOException e) {
+            //        e.printStackTrace();
+            //    }
+            //}
+            //System.out.println("bufferLen=" + bufferLen);
 
-            if (bufferLen <= 0)
-                return;
+            //if (bufferLen <= 0)
+            //    return;
 
-            String result = re.recognizeByFileBuffer(buffer, bufferLen, 80);
+            //String result = re.recognizeByFileBuffer(buffer, bufferLen, 80);
 
             try {
                 Message msg = new Message();
