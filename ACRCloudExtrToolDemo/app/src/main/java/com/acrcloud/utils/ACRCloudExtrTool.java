@@ -13,8 +13,7 @@ package com.acrcloud.utils;
 ACRCloudExtrTool Copyright 2015 ACRCloud v1.0.0
 
      This module can create "ACRCloud Fingerprint" from most of audio/video file.(
- Audio: mp3, wav, m4a, flac, aac, amr, ape, ogg ...;Video: mp4, mkv, wmv, flv, ts, 
- avi ...).
+       *          Audio: mp3, mp4, wav, m4a, aac, amr, ape, flv, flac, ogg, wma, caf, alac).
 
  Functions:
      createFingerprintByFile(file_name, start_time_seconds, audio_len_seconds, is_db_fingerprint);

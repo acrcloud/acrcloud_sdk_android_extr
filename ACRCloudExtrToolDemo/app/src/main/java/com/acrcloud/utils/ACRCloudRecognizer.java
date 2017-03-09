@@ -18,6 +18,9 @@ package com.acrcloud.utils;
 
 import android.util.Base64;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -28,6 +31,8 @@ import java.net.URL;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
+import android.util.Log;
+
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
@@ -38,6 +43,8 @@ public class ACRCloudRecognizer {
     private String accessSecret = "";
     private int timeout = 5 * 1000; // ms
     private boolean debug = false;
+
+    private static final String TAG = "ACRCloud";
 
     public ACRCloudRecognizer(Map<String, Object> config) {
         if (config.get("host") != null) {
@@ -74,7 +81,10 @@ public class ACRCloudRecognizer {
     {
         byte[] fp = ACRCloudExtrTool.createFingerprint(wavAudioBuffer, wavAudioBufferLen, false);
         if (fp == null) {
-            return "";
+            return ACRCloudStatusCode.DECODE_AUDIO_ERROR;
+        }
+        if (fp.length <= 0) {
+            return ACRCloudStatusCode.NO_RESULT;
         }
         return this.doRecogize(fp);
     }
@@ -82,7 +92,7 @@ public class ACRCloudRecognizer {
     /**
       *
       *  recognize by buffer of (Audio/Video file)
-      *          Audio: mp3, wav, m4a, flac, aac, amr, ape...
+      *          Audio: mp3, mp4, wav, m4a, aac, amr, ape, flv, flac, ogg, wma, caf, alac
       *
       *  @param fileBuffer query buffer
       *  @param fileBufferLen the length of fileBufferLen 
@@ -95,7 +105,10 @@ public class ACRCloudRecognizer {
     {
         byte[] fp = ACRCloudExtrTool.createFingerprintByFileBuffer(fileBuffer, fileBufferLen, startSeconds, 12, false);
         if (fp == null) {
-            return "";
+            return ACRCloudStatusCode.DECODE_AUDIO_ERROR;
+        }
+        if (fp.length <= 0) {
+            return ACRCloudStatusCode.NO_RESULT;
         }
         return this.doRecogize(fp);
     }
@@ -103,7 +116,7 @@ public class ACRCloudRecognizer {
     /**
       *
       *  recognize by file path of (Audio/Video file)
-      *          Audio: mp3, wav, m4a, flac, aac, amr, ape ...
+      *          Audio: mp3, mp4, wav, m4a, aac, amr, ape, flv, flac, ogg, wma, caf, alac
       *
       *  @param filePath query file path
       *  @param startSeconds skip (startSeconds) seconds from from the beginning of (filePath)
@@ -114,18 +127,21 @@ public class ACRCloudRecognizer {
     public String recognizeByFile(String filePath, int startSeconds)
     {
         byte[] fp = ACRCloudExtrTool.createFingerprintByFile(filePath, startSeconds, 12, false);
+
         if (fp == null) {
-            return "";
+            return ACRCloudStatusCode.DECODE_AUDIO_ERROR;
         }
+        if (fp.length <= 0) {
+            return ACRCloudStatusCode.NO_RESULT;
+        }
+
+        //Log.e(TAG, ""+fp.length);
         return this.doRecogize(fp);
     }
  
     private String doRecogize(byte[] fp) {
+
         System.out.println(""+fp.length);
-        if (fp == null) {
-            System.out.println("create fingerprint error!");
-            return "";
-        }
 
         String method = "POST";
         String httpURL = "/v1/identify";
@@ -148,6 +164,13 @@ public class ACRCloudRecognizer {
         postParams.put("signature_version", sigVersion);
 
         String res = postHttp(reqURL, postParams, this.timeout);
+
+        try {
+            JSONObject json_res = new JSONObject(res);
+        } catch (JSONException e) {
+            Log.e(TAG, "json error: " + res);
+            res = ACRCloudStatusCode.JSON_ERROR;
+        }
 
         return res;
     }
@@ -217,17 +240,21 @@ public class ACRCloudRecognizer {
 
             out.write(postBufferStream.toByteArray());
             out.flush();
-            int response = conn.getResponseCode();
-            if (response == HttpURLConnection.HTTP_OK) {
+            int responseCode = conn.getResponseCode();
+            if (responseCode == HttpURLConnection.HTTP_OK) {
                 reader = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
                 String tmpRes = "";
                 while ((tmpRes = reader.readLine()) != null) {
                     if (tmpRes.length() > 0)
                         res = res + tmpRes;
                 }
+            } else {
+                System.out.println("http error response code " + responseCode);
+                res = ACRCloudStatusCode.HTTP_ERROR;
             }
         } catch (Exception e) {
             e.printStackTrace();
+            res = ACRCloudStatusCode.HTTP_ERROR;
         } finally {
             try {
                 if (postBufferStream != null) {
@@ -252,4 +279,14 @@ public class ACRCloudRecognizer {
         }
         return res;
     }
+}
+
+class ACRCloudStatusCode
+{
+    public static String HTTP_ERROR = "{\"status\":{\"msg\":\"Http Error\", \"code\":3000}}";
+    public static String NO_RESULT = "{\"status\":{\"msg\":\"No Result\", \"code\":1001}}";
+    public static String DECODE_AUDIO_ERROR = "{\"status\":{\"msg\":\"Can not decode audio data\", \"code\":2005}}";
+    public static String RECORD_ERROR = "{\"status\":{\"msg\":\"Record Error\", \"code\":2000}}";
+    public static String JSON_ERROR = "{\"status\":{\"msg\":\"json error\", \"code\":2002}}";
+    public static String UNKNOW_ERROR = "{\"status\":{\"msg\":\"unknow error\", \"code\":2010}}";
 }

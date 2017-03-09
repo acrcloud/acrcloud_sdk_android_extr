@@ -3,7 +3,7 @@ create  "ACRCloud Fingerprint" by Audio/Video file, and use "ACRCloud Fingerprin
 
 # Overview
 This android java SDK can recognize ACRCloud by most of audio file.<br>
->>>>Audio: mp3, wav, m4a, flac, aac, amr, ape, ogg ...<br>
+>>>>Audio: mp3, mp4, wav, m4a, aac, amr, ape, flv, flac, ogg, wma, caf, alac<br>
 
 # ACRCloud
 Docs: [https://docs.acrcloud.com/](https://docs.acrcloud.com/)<br>
@@ -17,7 +17,7 @@ Introduction all API.
       /**
       *
       *  recognize by file path of (Audio/Video file)
-      *          Audio: mp3, wav, m4a, flac, aac, amr, ape, ogg ...
+      *          Audio: mp3, mp4, wav, m4a, aac, amr, ape, flv, flac, ogg, wma, caf, alac
       *
       *  @param filePath query file path
       *  @param startSeconds skip (startSeconds) seconds from from the beginning of (filePath)
@@ -30,7 +30,7 @@ Introduction all API.
       /**
       *
       *  recognize by buffer of (Audio/Video file)
-      *          Audio: mp3, wav, m4a, flac, aac, amr, ape, ogg ...
+      *          Audio: mp3, mp4, wav, m4a, aac, amr, ape, flv, flac, ogg, wma, caf, alac
       *
       *  @param fileBuffer query buffer
       *  @param fileBufferLen the length of fileBufferLen
