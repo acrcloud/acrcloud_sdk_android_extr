@@ -135,7 +135,7 @@ public class ACRCloudRecognizer {
             return ACRCloudStatusCode.NO_RESULT;
         }
 
-        //Log.e(TAG, ""+fp.length);
+        Log.e(TAG, ""+fp.length);
         return this.doRecogize(fp);
     }
  
@@ -149,7 +149,7 @@ public class ACRCloudRecognizer {
         String sigVersion = "1";
         String timestamp = getUTCTimeSeconds();
 
-        String reqURL = "http://" + host + httpURL;
+        String reqURL = "https://" + host + httpURL;
 
         String sigStr = method + "\n" + httpURL + "\n" + accessKey + "\n" + dataType + "\n" + sigVersion + "\n" + timestamp;
         String signature = encryptByHMACSHA1(sigStr.getBytes(), this.accessSecret.getBytes());

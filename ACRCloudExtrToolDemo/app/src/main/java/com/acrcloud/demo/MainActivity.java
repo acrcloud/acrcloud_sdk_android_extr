@@ -1,33 +1,33 @@
 package com.acrcloud.demo;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.acrcloud.utils.ACRCloudExtrTool;
 import com.acrcloud.utils.ACRCloudRecognizer;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
-    private TextView mVolume, mResult, tv_time;
-
-    private boolean mProcessing = false;
-    private boolean initState = false;
+    private TextView mResult;
 
     private String path = "";
+    private static final String TAG = "ACRCloud";
 
 
     private Handler mHandler = new Handler(Looper.getMainLooper()) {
@@ -44,13 +44,20 @@ public class MainActivity extends AppCompatActivity {
             }
         };
     };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        this.verifyPermissions();
+
+        ACRCloudExtrTool.setDebug();
+
         path = Environment.getExternalStorageDirectory().toString()
                 + "/acrcloud/model";
+
+        Log.e(TAG, path);
 
         File file = new File(path);
         if(!file.exists()){
@@ -75,44 +82,51 @@ public class MainActivity extends AppCompatActivity {
 
         public void run() {
             Map<String, Object> config = new HashMap<String, Object>();
-            // Replace "xxxxxxxx" below with your project's host, access_key and access_secret.
-            config.put("access_key", "XXXXXXXXX");
-            config.put("access_secret", "XXXXXXXX");
-            config.put("host", "XXXXXXXX");
-            config.put("debug", false);
+            // Replace "xxxxxxxx" below with your project's access_key and access_secret.
+            config.put("access_key", "");
+            config.put("access_secret", "");
+            config.put("host", "");
             config.put("timeout", 5);
 
             ACRCloudRecognizer re = new ACRCloudRecognizer(config);
-            String result = re.recognizeByFile(path + "/test.mp3", 10);
-            System.out.println(result);
+            String filePath = path + "/test.mp3";
+            File file = new File(filePath);
+            if (file.canRead()) {
+                Log.e(TAG, "can read");
+            } else {
+                Log.e(TAG, "can not read");
+                return;
+            }
+            String result = re.recognizeByFile(filePath, 10);
+            Log.e(TAG, result);
 
-            //File file = new File(path + "/test.mp3");
-            //byte[] buffer = new byte[3 * 1024 * 1024];
-            //if (!file.exists()) {
-            //    return;
-            //}
-            //FileInputStream fin = null;
-            //int bufferLen = 0;
-            //try {
-            //    fin = new FileInputStream(file);
-            //    bufferLen = fin.read(buffer, 0, buffer.length);
-            //} catch (Exception e) {
-            //    e.printStackTrace();
-            //} finally {
-            //    try {
-            //        if (fin != null) {
-            //            fin.close();
-            //        }
-            //    } catch (IOException e) {
-            //        e.printStackTrace();
-            //    }
-            //}
-            //System.out.println("bufferLen=" + bufferLen);
+            /*File file = new File(path + "/test.mp3");
+            byte[] buffer = new byte[3 * 1024 * 1024];
+            if (!file.exists()) {
+                return;
+            }
+            FileInputStream fin = null;
+            int bufferLen = 0;
+            try {
+                fin = new FileInputStream(file);
+                bufferLen = fin.read(buffer, 0, buffer.length);
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    if (fin != null) {
+                        fin.close();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            System.out.println("bufferLen=" + bufferLen);
 
-            //if (bufferLen <= 0)
-            //    return;
+            if (bufferLen <= 0)
+                return;
 
-            //String result = re.recognizeByFileBuffer(buffer, bufferLen, 80);
+            String result = re.recognizeByFileBuffer(buffer, bufferLen, 0);*/
 
             try {
                 Message msg = new Message();
@@ -130,25 +144,23 @@ public class MainActivity extends AppCompatActivity {
         new RecThread().start();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
+    private static String[] PERMISSIONS = {
+            Manifest.permission.ACCESS_NETWORK_STATE,
+            Manifest.permission.ACCESS_WIFI_STATE,
+            Manifest.permission.INTERNET,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.RECORD_AUDIO,
+            Manifest.permission.READ_EXTERNAL_STORAGE
+    };
+    public void verifyPermissions() {
+        for (int i=0; i<PERMISSIONS.length; i++) {
+            int permission = ActivityCompat.checkSelfPermission(this, PERMISSIONS[i]);
+            if (permission != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, PERMISSIONS,
+                        REQUEST_EXTERNAL_STORAGE);
+                break;
+            }
         }
-
-        return super.onOptionsItemSelected(item);
     }
 }
